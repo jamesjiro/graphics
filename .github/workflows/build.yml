@@ -29,6 +29,9 @@ jobs:
         pip install pytest
         pip install flake8
         flake8 --config=.flake8 tensorflow_graphics/
+    - name: Build rasterizer
+      run: |
+        docker run -v ${PWD}:/working_dir -w /working_dir  tensorflow/tensorflow:custom-op-ubuntu16 "./build_rasterizer.sh"
     - name: Install pip requirements
       run: |
         pip install -r requirements.txt
@@ -41,4 +44,4 @@ jobs:
         pip install dist/tensorflow_graphics*.whl
     - name: Test install
       run: |
-        cd $(mktemp -d) && python -c 'import tensorflow_graphics as tfg'
+        CURR_DIR=`readlink -f .` && cd $(mktemp -d) && cp ${CURR_DIR}/pip_rasterizer_op_check.py . && python pip_rasterizer_op_check.py
